@@ -8,16 +8,19 @@
   <script>
     // This page can be shown at any address, so point relative links at the site root.
     // On GitHub Pages project sites the root is the first folder (e.g. /Depart-Karl/).
+    // The stylesheets are written here too, so the browser doesn't fetch them from the wrong folder first.
     (function () {
       var first = location.pathname.split('/')[1];
       var base = location.hostname.endsWith('github.io') && first ? '/' + first + '/' : '/';
-      document.write('<base href="' + base + '">');
+      document.write(
+        '<base href="' + base + '">' +
+        '<link rel="icon" href="favicon.svg" type="image/svg+xml">' +
+        '<link rel="stylesheet" href="css/tokens.css">' +
+        '<link rel="stylesheet" href="css/styles.css">' +
+        '<script type="module" src="js/core/site.js"><\/script>'
+      );
     })();
   </script>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <script type="module" src="js/core/site.js"></script>
 </head>
 <body data-page="not-found">
   <header id="site-header" class="site-header"></header>
