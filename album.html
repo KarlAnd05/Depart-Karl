@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photo Album · Depart Karl</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/pages/album.js"></script>
+</head>
+<body data-page="album">
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Photo Album</h1>
+    <p class="lead">Share your photos. Public photos appear in the gallery for everyone; private photos are seen only by the site administrator.</p>
+
+    <p id="page-status" class="notice" role="status"></p>
+
+    <div id="album-app" hidden>
+      <section class="card">
+        <h2>Upload a photo</h2>
+        <form id="upload-form" class="form" novalidate>
+          <label class="field">
+            <span>Photo</span>
+            <input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
+          </label>
+          <p class="hint">JPEG, PNG, WebP or GIF, up to 5 MB.</p>
+          <div id="upload-preview" class="upload-preview"></div>
+
+          <label class="field">
+            <span>Title <span class="muted">(optional)</span></span>
+            <input id="photo-title" type="text" maxlength="100" placeholder="e.g. Sunset at the beach">
+          </label>
+
+          <label class="field">
+            <span>Album <span class="muted">(optional)</span></span>
+            <input id="photo-album" type="text" maxlength="60" placeholder="e.g. Summer 2026" list="album-names">
+            <datalist id="album-names"></datalist>
+          </label>
+
+          <fieldset>
+            <legend>Who can see it?</legend>
+            <label class="radio">
+              <input type="radio" name="visibility" value="public" checked>
+              <span><strong>Public</strong> — anyone visiting the website</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="visibility" value="private">
+              <span><strong>Private</strong> — only the site administrator</span>
+            </label>
+          </fieldset>
+
+          <div>
+            <button id="upload-btn" class="btn btn-primary" type="submit">Upload photo</button>
+          </div>
+          <p id="upload-status" class="notice" role="status"></p>
+        </form>
+      </section>
+
+      <div class="tabs" role="tablist">
+        <button class="tab" type="button" role="tab" data-tab="public" aria-selected="true">Public gallery</button>
+        <button class="tab" type="button" role="tab" data-tab="mine" aria-selected="false">My uploads</button>
+      </div>
+      <section id="gallery" aria-live="polite"></section>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

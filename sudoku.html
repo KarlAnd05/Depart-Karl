@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sudoku · Depart Karl</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/pages/sudoku.js"></script>
+</head>
+<body data-page="sudoku">
+  <header id="site-header" class="site-header"></header>
+  <div id="sudoku-bg" class="sudoku-bg" hidden></div>
+
+  <main>
+    <div class="sudoku-panel">
+      <h1>Sudoku</h1>
+      <p class="lead">Fill every row, column and 3×3 box with the numbers 1–9. Tap a cell, then pick a number.</p>
+
+      <div class="toolbar">
+        <label class="inline">Level
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+        <button id="new-game" class="btn btn-primary" type="button">New game</button>
+        <button id="restart" class="btn" type="button">Restart</button>
+        <button id="check" class="btn" type="button">Check</button>
+      </div>
+
+      <div id="sudoku"></div>
+      <p id="sudoku-message" class="notice sudoku-message" role="status"></p>
+
+      <div class="toolbar" style="margin-top: 16px">
+        <label class="btn file-btn">
+          🖼️ Background photo
+          <input id="bg-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+        </label>
+        <button id="bg-remove" class="btn" type="button" hidden>Remove background</button>
+      </div>
+      <p id="bg-status" class="hint" role="status"></p>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

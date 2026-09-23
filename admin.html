@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin · Depart Karl</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔑</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/pages/admin.js"></script>
+</head>
+<body data-page="admin">
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Admin dashboard</h1>
+    <p id="page-status" class="notice" role="status"></p>
+
+    <section id="login" class="card" hidden>
+      <h2>Log in</h2>
+      <form id="login-form" class="form">
+        <label class="field">
+          <span>Email</span>
+          <input id="login-email" type="email" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="login-password" type="password" autocomplete="current-password" required>
+        </label>
+        <div><button id="login-btn" class="btn btn-primary" type="submit">Log in</button></div>
+        <p id="login-status" class="notice notice-error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="not-admin" class="card" hidden>
+      <p>You are logged in as <strong id="not-admin-email"></strong>, but this account is not an administrator.</p>
+      <button class="btn" type="button" data-logout>Log out</button>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="toolbar">
+        <span class="muted">Logged in as <strong id="admin-email"></strong></span>
+        <button class="btn btn-small" type="button" data-logout>Log out</button>
+      </div>
+      <div class="toolbar">
+        <label class="inline">Show
+          <select id="filter">
+            <option value="all">All photos</option>
+            <option value="public">Public only</option>
+            <option value="private">Private only</option>
+          </select>
+        </label>
+        <button id="refresh" class="btn" type="button">Refresh</button>
+        <span id="summary" class="muted"></span>
+      </div>
+      <div id="admin-grid"></div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

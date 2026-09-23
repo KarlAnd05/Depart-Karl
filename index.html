@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photo Puzzle · Depart Karl</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/pages/puzzle.js"></script>
+</head>
+<body data-page="puzzle">
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Photo Puzzle</h1>
+    <p class="lead">Rebuild the photo. Tap two pieces to swap them, or drag a piece onto another.</p>
+
+    <div class="toolbar">
+      <label class="inline">Pieces
+        <select id="difficulty">
+          <option value="3">3 × 3 · Easy</option>
+          <option value="4" selected>4 × 4 · Medium</option>
+          <option value="5">5 × 5 · Hard</option>
+          <option value="6">6 × 6 · Expert</option>
+        </select>
+      </label>
+      <button id="new-photo" class="btn btn-primary" type="button">New photo</button>
+      <button id="reshuffle" class="btn" type="button">Reshuffle</button>
+      <button id="peek" class="btn" type="button">Peek</button>
+    </div>
+
+    <p id="status" class="notice" role="status"></p>
+    <div id="puzzle" hidden></div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

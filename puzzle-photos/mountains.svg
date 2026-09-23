@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff8a5c"/>
+      <stop offset="0.55" stop-color="#ffc977"/>
+      <stop offset="1" stop-color="#ffe7b3"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3f76a3"/>
+      <stop offset="1" stop-color="#1b3552"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="850" cy="300" r="90" fill="#fff3d1"/>
+  <g fill="#ffffff" opacity="0.7">
+    <ellipse cx="250" cy="150" rx="110" ry="28"/>
+    <ellipse cx="330" cy="128" rx="70" ry="26"/>
+    <ellipse cx="1010" cy="120" rx="95" ry="22"/>
+    <ellipse cx="600" cy="80" rx="60" ry="16"/>
+  </g>
+  <path d="M0 520 L180 300 L300 420 L470 220 L640 450 L760 330 L930 480 L1080 280 L1200 400 L1200 560 L0 560 Z" fill="#8a5a7a"/>
+  <g fill="#ffffff">
+    <path d="M180 300 L230 350 L210 342 L188 356 L165 342 L139 350 Z"/>
+    <path d="M470 220 L514 280 L492 270 L470 288 L448 268 L419 280 Z"/>
+    <path d="M1080 280 L1130 330 L1108 322 L1085 338 L1062 324 L1042 330 Z"/>
+  </g>
+  <path d="M0 560 L150 430 L320 540 L520 400 L700 560 L880 440 L1050 540 L1200 460 L1200 600 L0 600 Z" fill="#5b4a78"/>
+  <rect y="600" width="1200" height="200" fill="url(#lake)"/>
+  <g fill="#ffe6a8" opacity="0.65">
+    <rect x="780" y="620" width="140" height="6" rx="3"/>
+    <rect x="800" y="645" width="100" height="5" rx="2.5"/>
+    <rect x="820" y="668" width="60" height="4" rx="2"/>
+    <rect x="835" y="690" width="30" height="3" rx="1.5"/>
+  </g>
+  <g fill="#1f3a2c">
+    <path d="M40 605 L70 520 L100 605 Z"/>
+    <path d="M85 605 L125 490 L165 605 Z"/>
+    <path d="M150 605 L180 530 L210 605 Z"/>
+    <path d="M1030 605 L1065 510 L1100 605 Z"/>
+    <path d="M1090 605 L1130 480 L1170 605 Z"/>
+  </g>
+  <path d="M380 730 L520 730 L500 750 L400 750 Z" fill="#3b2b24"/>
+  <path d="M448 730 L448 670 L495 725 Z" fill="#f4f1ea"/>
+</svg>
