@@ -26,6 +26,11 @@ function setStatus(message, type = '') {
   status.className = `notice ${type ? `notice-${type}` : ''}`;
 }
 
+function setLoading(text) {
+  status.innerHTML = `<span class="spinner" aria-hidden="true"></span><span>${text}</span>`;
+  status.className = 'notice';
+}
+
 async function loadPhotoList() {
   const res = await fetch(`${PHOTO_DIR}manifest.json`, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Could not load the photo list (${res.status}).`);
@@ -44,6 +49,7 @@ function pickRandomPhoto() {
 
 async function nextPhoto() {
   current = pickRandomPhoto();
+  setLoading('Loading photo…');
   try {
     await game.start(PHOTO_DIR + encodeURIComponent(current), Number(difficulty.value));
     setStatus('');

@@ -1,8 +1,9 @@
 -- =============================================================================
 -- Depart Karl — Supabase setup for the Photo Album
 --
--- Paste this whole file into Supabase → SQL Editor → New query → Run.
--- It is safe to run again (it replaces the policies it creates).
+-- With the Supabase GitHub integration ("Deploy to production" on), this runs
+-- automatically when pushed to main. Without it, paste the whole file into
+-- Supabase → SQL Editor → New query → Run. It is safe to run more than once.
 --
 -- Who can see what:
 --   • Public photos  → everyone
@@ -140,8 +141,8 @@ create policy "photo files: delete" on storage.objects
 
 -- ---------- Make yourself the administrator ------------------------------------
 -- 1. Supabase → Authentication → Users → "Add user" → create your email + password
---    (tick "Auto Confirm User").
--- 2. Run this line with your email:
---
---    insert into public.admins (user_id)
---    select id from auth.users where email = 'YOUR-EMAIL@example.com';
+--    (tick "Auto Confirm User"), then copy the new user's "User UID".
+-- 2. Supabase → Table Editor → admins → Insert row → paste the UID into user_id → Save.
+--    (Or in the SQL Editor:
+--       insert into public.admins (user_id)
+--       select id from auth.users where email = 'YOUR-EMAIL@example.com'; )

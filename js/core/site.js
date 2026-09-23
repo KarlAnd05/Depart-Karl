@@ -4,6 +4,7 @@
 //   1. create `my-page.html` (copy an existing page as a starting point),
 //   2. give its <body> a `data-page="my-page"` attribute,
 //   3. add an entry to PAGES below.
+import { icon } from './icons.js';
 
 export const SITE_NAME = 'Depart Karl';
 
@@ -20,10 +21,11 @@ function renderHeader() {
   const current = document.body.dataset.page;
 
   header.innerHTML = `
+    <a class="skip-link" href="#main">Skip to content</a>
     <div class="header-inner">
       <a class="brand" href="index.html">${SITE_NAME}</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
-        <span aria-hidden="true">☰</span>
+        ${icon('menu')}
       </button>
       <nav id="site-nav" class="site-nav" aria-label="Main">
         ${PAGES.map((p) => `<a href="${p.href}"${p.id === current ? ' aria-current="page"' : ''}>${p.label}</a>`).join('')}

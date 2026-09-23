@@ -2,9 +2,15 @@ import { generate, PEERS, DIFFICULTIES } from './generator.js';
 
 const STORAGE_KEY = 'sudoku.game';
 
+function formatTime(ms) {
+  const total = Math.floor(ms / 1000);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
 /**
- * Playable Sudoku board with an on-screen number pad and keyboard support.
- * The current game is saved in the browser so a reload doesn't lose progress.
+ * Playable Sudoku board with an on-screen number pad, keyboard support,
+ * a timer and undo. The current game is saved in the browser so a reload
+ * doesn't lose progress.
  *
  *   const game = new SudokuGame(element, { onMessage: (text, type) => … });
  */
@@ -13,12 +19,20 @@ export class SudokuGame {
     this.onMessage = onMessage;
     this.selected = null;
     this.wrong = new Set();
+    this.history = []; // [{ index, previous }] for undo
+    this.elapsed = 0; // ms spent on the current game
 
     root.innerHTML = `
+      <div class="sudoku-stats">
+        <span>Level: <b data-level></b></span>
+        <span>Time: <b data-time>0:00</b></span>
+      </div>
       <div class="sudoku-board" role="grid" aria-label="Sudoku board"></div>
       <div class="numpad" aria-label="Number pad"></div>`;
     this.board = root.querySelector('.sudoku-board');
     this.numpad = root.querySelector('.numpad');
+    this.levelEl = root.querySelector('[data-level]');
+    this.timeEl = root.querySelector('[data-time]');
 
     this.cells = Array.from({ length: 81 }, (_, i) => {
       const row = Math.floor(i / 9);
@@ -60,6 +74,15 @@ export class SudokuGame {
     });
     document.addEventListener('keydown', (e) => this.onKeyDown(e));
 
+    // The clock only runs while the page is visible and the puzzle is unsolved.
+    setInterval(() => {
+      if (this.solved || document.visibilityState !== 'visible') return;
+      this.elapsed += 1000;
+      this.timeEl.textContent = formatTime(this.elapsed);
+      if ((this.elapsed / 1000) % 5 === 0) this.save();
+    }, 1000);
+    window.addEventListener('pagehide', () => this.save());
+
     if (!this.restore()) this.newGame('easy');
   }
 
@@ -81,6 +104,8 @@ export class SudokuGame {
   reset() {
     this.selected = null;
     this.wrong.clear();
+    this.history = [];
+    this.elapsed = 0;
     this.solved = false;
     this.onMessage('');
     this.save();
@@ -95,13 +120,31 @@ export class SudokuGame {
   /** Put `value` (1–9) in the selected cell, or clear it with 0. */
   input(value) {
     const i = this.selected;
-    if (i === null || this.solved || this.givens[i]) return;
+    if (i === null || this.solved || this.givens[i] || this.values[i] === value) return;
+    this.history.push({ index: i, previous: this.values[i] });
+    this.setCell(i, value);
+  }
+
+  /** Take back the last number entered or erased. */
+  undo() {
+    if (this.solved) return;
+    const last = this.history.pop();
+    if (!last) return;
+    this.selected = last.index;
+    this.setCell(last.index, last.previous);
+  }
+
+  get canUndo() {
+    return this.history.length > 0 && !this.solved;
+  }
+
+  setCell(i, value) {
     this.values[i] = value;
     this.wrong.delete(i);
     this.onMessage('');
     if (this.values.every((v, j) => v === this.solution[j])) {
       this.solved = true;
-      this.onMessage('🎉 Solved! Well done.', 'success');
+      this.onMessage(`Solved in ${formatTime(this.elapsed)}. Well done!`, 'success');
     }
     this.save();
     this.render();
@@ -126,8 +169,13 @@ export class SudokuGame {
   }
 
   onKeyDown(e) {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.target instanceof Element && e.target.closest('input, select, textarea')) return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      this.undo();
+      return;
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (this.selected === null) return;
 
     if (/^[1-9]$/.test(e.key)) {
@@ -174,6 +222,9 @@ export class SudokuGame {
     // Grey out a number once all nine of it are on the board.
     this.numButtons.forEach((btn, idx) => { btn.disabled = counts[idx + 1] >= 9; });
     this.board.classList.toggle('solved', this.solved);
+    this.levelEl.textContent = DIFFICULTIES[this.difficulty].label;
+    this.timeEl.textContent = formatTime(this.elapsed);
+    this.onChange?.();
   }
 
   save() {
@@ -183,6 +234,7 @@ export class SudokuGame {
         givens: this.givens,
         solution: this.solution,
         values: this.values,
+        elapsed: this.elapsed,
       }));
     } catch {
       // Storage unavailable (private mode, etc.) — the game still works, it just won't be remembered.
@@ -198,9 +250,10 @@ export class SudokuGame {
       this.givens = data.givens;
       this.solution = data.solution;
       this.values = data.values;
+      this.elapsed = Number.isFinite(data.elapsed) ? data.elapsed : 0;
       this.solved = this.values.every((v, i) => v === this.solution[i]);
       this.render();
-      if (this.solved) this.onMessage('🎉 Solved! Start a new game whenever you like.', 'success');
+      if (this.solved) this.onMessage('Solved! Start a new game whenever you like.', 'success');
       return true;
     } catch {
       return false;

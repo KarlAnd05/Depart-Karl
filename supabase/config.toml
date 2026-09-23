@@ -1,0 +1,4 @@
+# Supabase project settings, read by the Supabase CLI and GitHub integration.
+# Production deploys from GitHub apply the SQL files in supabase/migrations/.
+# Auth settings (like anonymous sign-ins) are set in the Supabase dashboard.
+project_id = "depart-karl"

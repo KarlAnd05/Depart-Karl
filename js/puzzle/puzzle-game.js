@@ -41,7 +41,7 @@ export class PuzzleGame {
         <img class="puzzle-peek" alt="" hidden>
         <div class="puzzle-overlay" hidden>
           <div class="card" role="alertdialog" aria-labelledby="puzzle-done-title">
-            <h2 id="puzzle-done-title">🎉 Puzzle complete!</h2>
+            <h2 id="puzzle-done-title">Puzzle complete</h2>
             <p class="muted" data-summary></p>
             <div class="toolbar" data-actions></div>
           </div>

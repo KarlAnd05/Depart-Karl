@@ -3,7 +3,8 @@
 import '../core/site.js';
 import { getSupabase, isAdmin } from '../core/supabase.js';
 import { formatBytes } from '../core/image-utils.js';
-import { escapeHtml, formatDate, getSignedUrls, deletePhoto, openLightbox } from '../album/photos.js';
+import { toast, confirmDialog, loadingHtml } from '../core/ui.js';
+import { escapeHtml, formatDate, getSignedUrls, deletePhoto, openLightbox, photoCardHtml } from '../album/photos.js';
 
 const $ = (id) => document.getElementById(id);
 const pageStatus = $('page-status');
@@ -13,6 +14,7 @@ const filter = $('filter');
 let sb = null;
 let photos = [];
 let urls = new Map();
+let viewable = [];
 
 function show(section) {
   for (const id of ['login', 'not-admin', 'dashboard']) $(id).hidden = id !== section;
@@ -36,7 +38,7 @@ async function refreshAuthState() {
 }
 
 async function loadPhotos() {
-  grid.innerHTML = '<p class="muted">Loading photos…</p>';
+  grid.innerHTML = loadingHtml('Loading photos…');
   const { data, error } = await sb.from('photos').select('*').order('created_at', { ascending: false });
   if (error) {
     grid.innerHTML = `<p class="notice notice-error">Could not load photos: ${escapeHtml(error.message)}</p>`;
@@ -57,38 +59,47 @@ function render() {
     return;
   }
 
-  grid.innerHTML = `<div class="photo-grid">${visible.map((p) => {
-    const title = p.title || 'Untitled';
+  viewable = [];
+  const cards = visible.map((p) => {
     const url = urls.get(p.storage_path);
-    return `
-      <article class="photo-card">
-        ${url
-          ? `<button class="photo-thumb" type="button" data-open="${p.id}" aria-label="View ${escapeHtml(title)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(title)}" loading="lazy"></button>`
-          : '<div class="photo-locked"><span class="icon" aria-hidden="true">⚠️</span><span>Image file missing</span></div>'}
-        <div class="photo-meta">
-          <span class="photo-title">${escapeHtml(title)}</span>
-          <span class="badge ${p.is_public ? 'badge-public' : 'badge-private'}">${p.is_public ? 'Public' : 'Private'}</span>
-          <span class="muted">Album: ${escapeHtml(p.album || 'Unsorted')}</span>
-          <span class="muted">${formatDate(p.created_at)} · ${formatBytes(p.size_bytes)}${p.width ? ` · ${p.width}×${p.height}` : ''}</span>
-          <span class="muted" title="${escapeHtml(p.owner_id)}">Uploader: ${escapeHtml(String(p.owner_id ?? 'unknown').slice(0, 8))}</span>
-          <div class="photo-actions">
-            <button class="btn btn-small" type="button" data-toggle="${p.id}">Make ${p.is_public ? 'private' : 'public'}</button>
-            <button class="btn btn-small btn-danger" type="button" data-delete="${p.id}">Delete</button>
-          </div>
-        </div>
-      </article>`;
-  }).join('')}</div>`;
+    if (url) viewable.push({ src: url, caption: p.title || 'Untitled' });
+    return photoCardHtml(p, url, {
+      index: viewable.length - 1,
+      placeholder: { icon: 'alert', text: 'Image file missing' },
+      details: [
+        `Album: ${escapeHtml(p.album || 'Unsorted')}`,
+        `${formatDate(p.created_at)} · ${formatBytes(p.size_bytes)}${p.width ? ` · ${p.width}×${p.height}` : ''}`,
+        `<span title="${escapeHtml(p.owner_id)}">Uploader: ${escapeHtml(String(p.owner_id ?? 'unknown').slice(0, 8))}</span>`,
+      ],
+      actions: `
+        <button class="btn btn-small" type="button" data-toggle="${p.id}">Make ${p.is_public ? 'private' : 'public'}</button>
+        <button class="btn btn-small btn-danger" type="button" data-delete="${p.id}">Delete</button>`,
+    });
+  });
+  grid.innerHTML = `<div class="photo-grid">${cards.join('')}</div>`;
 }
 
 grid.addEventListener('click', async (e) => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  const photo = photos.find((p) => p.id === (btn.dataset.open || btn.dataset.toggle || btn.dataset.delete));
-  if (!photo) return;
-
-  if (btn.dataset.open) {
-    openLightbox(btn.querySelector('img').src, photo.title || 'Untitled');
+  const viewBtn = e.target.closest('[data-view]');
+  if (viewBtn) {
+    openLightbox(viewable, Number(viewBtn.dataset.view));
     return;
+  }
+
+  const btn = e.target.closest('[data-toggle], [data-delete]');
+  if (!btn) return;
+  const photo = photos.find((p) => p.id === (btn.dataset.toggle || btn.dataset.delete));
+  if (!photo) return;
+  const title = photo.title || 'Untitled';
+
+  if (btn.dataset.delete) {
+    const ok = await confirmDialog({
+      title: 'Delete this photo?',
+      message: `"${title}" will be permanently deleted. This can’t be undone.`,
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (!ok) return;
   }
 
   btn.disabled = true;
@@ -98,17 +109,15 @@ grid.addEventListener('click', async (e) => {
       if (error || !data?.length) throw new Error(error?.message ?? 'Update was not allowed.');
       photo.is_public = !photo.is_public;
       render();
-    } else if (btn.dataset.delete) {
-      if (!confirm(`Delete "${photo.title || 'Untitled'}" permanently?`)) {
-        btn.disabled = false;
-        return;
-      }
+      toast(`"${title}" is now ${photo.is_public ? 'public' : 'private'}.`, 'success');
+    } else {
       await deletePhoto(sb, photo);
       photos = photos.filter((p) => p.id !== photo.id);
       render();
+      toast(`"${title}" was deleted.`, 'success');
     }
   } catch (err) {
-    alert(err.message);
+    toast(err.message, 'error');
     btn.disabled = false;
   }
 });
@@ -120,12 +129,14 @@ $('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const loginBtn = $('login-btn');
   loginBtn.disabled = true;
+  loginBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Logging in…';
   $('login-status').textContent = '';
   const { error } = await sb.auth.signInWithPassword({
     email: $('login-email').value.trim(),
     password: $('login-password').value,
   });
   loginBtn.disabled = false;
+  loginBtn.textContent = 'Log in';
   if (error) {
     $('login-status').textContent = 'Wrong email or password.';
     return;

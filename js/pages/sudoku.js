@@ -3,6 +3,7 @@ import '../core/site.js';
 import { SudokuGame } from '../sudoku/sudoku-game.js';
 import { validateImageFile, resizeImage, blobToDataUrl } from '../core/image-utils.js';
 import { LOCAL_IMAGE_MAX_BYTES } from '../config.js';
+import { confirmDialog } from '../core/ui.js';
 
 const BG_STORAGE_KEY = 'sudoku.background';
 const BG_MAX_SIDE_PX = 1920;
@@ -23,9 +24,23 @@ function showMessage(text, type = '') {
 const game = new SudokuGame($('sudoku'), { onMessage: showMessage });
 difficulty.value = game.difficulty;
 
-$('new-game').addEventListener('click', () => game.newGame(difficulty.value));
-$('restart').addEventListener('click', () => game.restart());
+const undoBtn = $('undo');
+game.onChange = () => { undoBtn.disabled = !game.canUndo; };
+game.onChange();
+
+async function confirmLosingProgress(title) {
+  const hasProgress = game.values.some((v, i) => v && !game.givens[i]) && !game.solved;
+  return !hasProgress || confirmDialog({ title, message: 'Your current progress will be lost.', confirmLabel: 'Continue' });
+}
+
+$('new-game').addEventListener('click', async () => {
+  if (await confirmLosingProgress('Start a new game?')) game.newGame(difficulty.value);
+});
+$('restart').addEventListener('click', async () => {
+  if (await confirmLosingProgress('Restart this puzzle?')) game.restart();
+});
 $('check').addEventListener('click', () => game.check());
+undoBtn.addEventListener('click', () => game.undo());
 
 // ----- background photo -----
 

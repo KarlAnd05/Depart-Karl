@@ -1,0 +1,58 @@
+/* ==========================================================================
+   Design tokens — every color, font, size and shadow the site uses.
+   To restyle the whole website, change the values here.
+   ========================================================================== */
+
+:root {
+  /* Typography */
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font-body);
+  --font-size: 16px;
+
+  /* Surfaces & text */
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-hover: #f8f9fb;
+  --surface-sunken: #e6e9ef;
+  --text: #1c2230;
+  --muted: #5b6474;
+  --border: #dde1e8;
+  --border-strong: #c6cdd8;
+
+  /* Brand & status colors */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: #e6eefe;
+  --accent-soft-text: #1e3a8a;
+  --on-accent: #ffffff;
+  --success: #15803d;
+  --success-soft: #e5f5ea;
+  --warning: #8a5300;
+  --warning-soft: #fff3dc;
+  --danger: #c62828;
+  --danger-hover: #a91f1f;
+  --danger-soft: #fdecec;
+
+  /* Shape & depth */
+  --radius: 10px;
+  --radius-small: 8px;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 4px 16px rgba(16, 24, 40, 0.06);
+  --shadow-raised: 0 8px 30px rgba(0, 0, 0, 0.18);
+  --overlay: rgba(15, 23, 42, 0.45);
+
+  /* Layout */
+  --header-h: 56px;
+  --content-w: 1040px;
+
+  /* Sudoku board */
+  --sudoku-line: #c3c9d4;
+  --sudoku-box-line: var(--text);
+  --sudoku-given: var(--text);
+  --sudoku-entry: var(--accent);
+  --sudoku-peer: #eef2f8;
+  --sudoku-same: #d7e3fc;
+  --sudoku-selected: #b9cdfa;
+  --sudoku-wrong: #fbd5d5;
+  --sudoku-panel: rgba(255, 255, 255, 0.97);
+  --sudoku-bg-dim: rgba(15, 23, 42, 0.25);
+}

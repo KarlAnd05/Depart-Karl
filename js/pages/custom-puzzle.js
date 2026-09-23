@@ -32,7 +32,8 @@ async function usePhoto(file) {
   setStatus('');
   try {
     await validateImageFile(file, { maxBytes: LOCAL_IMAGE_MAX_BYTES });
-    setStatus('Preparing your puzzle…');
+    status.innerHTML = '<span class="spinner" aria-hidden="true"></span><span>Preparing your puzzle…</span>';
+    status.className = 'notice';
     const { blob } = await resizeImage(file, MAX_SIDE_PX, { quality: 0.92 });
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = URL.createObjectURL(blob);

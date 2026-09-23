@@ -4,14 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Photo Album · Depart Karl</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
+  <meta name="description" content="Browse the photo gallery and share your own photos, publicly or privately.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Depart Karl">
+  <meta property="og:title" content="Photo Album">
+  <meta property="og:description" content="Browse the photo gallery and share your own photos, publicly or privately.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styles.css">
   <script type="module" src="js/pages/album.js"></script>
 </head>
 <body data-page="album">
   <header id="site-header" class="site-header"></header>
 
-  <main>
+  <main id="main">
     <h1>Photo Album</h1>
     <p class="lead">Share your photos. Public photos appear in the gallery for everyone; private photos are seen only by the site administrator.</p>
 
@@ -21,11 +28,14 @@
       <section class="card">
         <h2>Upload a photo</h2>
         <form id="upload-form" class="form" novalidate>
-          <label class="field">
-            <span>Photo</span>
-            <input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
-          </label>
-          <p class="hint">JPEG, PNG, WebP or GIF, up to 5 MB.</p>
+          <div id="dropzone" class="dropzone">
+            <span>Drag a photo here, or</span>
+            <label class="btn file-btn">
+              Choose a photo
+              <input id="photo-file" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+            </label>
+            <span class="hint">JPEG, PNG, WebP or GIF. Large photos are resized automatically.</span>
+          </div>
           <div id="upload-preview" class="upload-preview"></div>
 
           <label class="field">

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Page not found · Depart Karl</title>
+  <script>
+    // This page can be shown at any address, so point relative links at the site root.
+    // On GitHub Pages project sites the root is the first folder (e.g. /Depart-Karl/).
+    (function () {
+      var first = location.pathname.split('/')[1];
+      var base = location.hostname.endsWith('github.io') && first ? '/' + first + '/' : '/';
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/core/site.js"></script>
+</head>
+<body data-page="not-found">
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <div class="empty-state">
+      <h1>Page not found</h1>
+      <p>The page you were looking for doesn't exist or has moved.</p>
+      <a class="btn btn-primary" href="index.html">Go to the home page</a>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

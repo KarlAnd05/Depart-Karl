@@ -4,7 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sudoku · Depart Karl</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+  <meta name="description" content="Play Sudoku at three difficulty levels, with your own photo as the background.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Depart Karl">
+  <meta property="og:title" content="Sudoku">
+  <meta property="og:description" content="Play Sudoku at three difficulty levels, with your own photo as the background.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styles.css">
   <script type="module" src="js/pages/sudoku.js"></script>
 </head>
@@ -12,7 +19,7 @@
   <header id="site-header" class="site-header"></header>
   <div id="sudoku-bg" class="sudoku-bg" hidden></div>
 
-  <main>
+  <main id="main">
     <div class="sudoku-panel">
       <h1>Sudoku</h1>
       <p class="lead">Fill every row, column and 3×3 box with the numbers 1–9. Tap a cell, then pick a number.</p>
@@ -26,6 +33,7 @@
           </select>
         </label>
         <button id="new-game" class="btn btn-primary" type="button">New game</button>
+        <button id="undo" class="btn" type="button" title="Undo (Ctrl+Z)" disabled>Undo</button>
         <button id="restart" class="btn" type="button">Restart</button>
         <button id="check" class="btn" type="button">Check</button>
       </div>
@@ -35,7 +43,7 @@
 
       <div class="toolbar" style="margin-top: 16px">
         <label class="btn file-btn">
-          🖼️ Background photo
+          Background photo
           <input id="bg-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
         </label>
         <button id="bg-remove" class="btn" type="button" hidden>Remove background</button>
