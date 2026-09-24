@@ -3,8 +3,8 @@
 // Supabase powers the Messages and Admin pages. Fill these in from your
 // Supabase project (Project Settings → API). The anon/publishable key is meant
 // to be public: access is enforced by the database policies in supabase/migrations/.
-export const SUPABASE_URL = '';
-export const SUPABASE_ANON_KEY = '';
+export const SUPABASE_URL = 'https://tjbtgmcmuhbqhjinzdov.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_sUPX1xb0gsr5KSig-zA-Kw__GNEc7rL';
 
 // Storage bucket for photos attached to messages (created in supabase/migrations/).
 export const MESSAGE_PHOTO_BUCKET = 'message-photos';
