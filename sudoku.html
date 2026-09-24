@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sudoku · Depart Karl</title>
-  <meta name="description" content="Play Sudoku at three difficulty levels, with your own photo as the background.">
+  <meta name="description" content="Play Sudoku online at three difficulty levels.">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Depart Karl">
   <meta property="og:title" content="Sudoku">
-  <meta property="og:description" content="Play Sudoku at three difficulty levels, with your own photo as the background.">
+  <meta property="og:description" content="Play Sudoku online at three difficulty levels.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styles.css">
@@ -17,7 +17,6 @@
 </head>
 <body data-page="sudoku">
   <header id="site-header" class="site-header"></header>
-  <div id="sudoku-bg" class="sudoku-bg" hidden></div>
 
   <main id="main">
     <div class="sudoku-panel">
@@ -40,15 +39,6 @@
 
       <div id="sudoku"></div>
       <p id="sudoku-message" class="notice sudoku-message" role="status"></p>
-
-      <div class="toolbar" style="margin-top: 16px">
-        <label class="btn file-btn">
-          Background photo
-          <input id="bg-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-        </label>
-        <button id="bg-remove" class="btn" type="button" hidden>Remove background</button>
-      </div>
-      <p id="bg-status" class="hint" role="status"></p>
     </div>
   </main>
 

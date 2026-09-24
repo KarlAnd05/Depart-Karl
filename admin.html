@@ -49,18 +49,19 @@
         <span class="muted">Logged in as <strong id="admin-email"></strong></span>
         <button class="btn btn-small" type="button" data-logout>Log out</button>
       </div>
+      <h2>Messages</h2>
       <div class="toolbar">
         <label class="inline">Show
           <select id="filter">
-            <option value="all">All photos</option>
-            <option value="public">Public only</option>
-            <option value="private">Private only</option>
+            <option value="all">All messages</option>
+            <option value="unread">Unread only</option>
+            <option value="photo">With a photo</option>
           </select>
         </label>
         <button id="refresh" class="btn" type="button">Refresh</button>
         <span id="summary" class="muted"></span>
       </div>
-      <div id="admin-grid"></div>
+      <div id="message-list" class="message-list"></div>
     </section>
   </main>
 

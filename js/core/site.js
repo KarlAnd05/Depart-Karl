@@ -12,7 +12,7 @@ export const PAGES = [
   { id: 'puzzle', label: 'Puzzle', href: 'index.html' },
   { id: 'custom-puzzle', label: 'Custom Puzzle', href: 'custom-puzzle.html' },
   { id: 'sudoku', label: 'Sudoku', href: 'sudoku.html' },
-  { id: 'album', label: 'Photo Album', href: 'album.html' },
+  { id: 'messages', label: 'Messages', href: 'messages.html' },
 ];
 
 function renderHeader() {

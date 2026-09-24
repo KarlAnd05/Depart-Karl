@@ -1,18 +1,20 @@
-// Admin dashboard — view every uploaded photo (including private ones),
-// change its visibility or delete it.
+// Admin dashboard — read the anonymous messages visitors sent (with their
+// photos), mark them as read, or delete them.
 import '../core/site.js';
+import { MESSAGE_PHOTO_BUCKET } from '../config.js';
 import { getSupabase, isAdmin } from '../core/supabase.js';
-import { formatBytes } from '../core/image-utils.js';
 import { toast, confirmDialog, loadingHtml } from '../core/ui.js';
-import { escapeHtml, formatDate, getSignedUrls, deletePhoto, openLightbox, photoCardHtml } from '../album/photos.js';
+import { escapeHtml, formatDateTime } from '../core/format.js';
+import { getSignedUrls } from '../core/photos.js';
+import { openLightbox } from '../core/lightbox.js';
 
 const $ = (id) => document.getElementById(id);
 const pageStatus = $('page-status');
-const grid = $('admin-grid');
+const list = $('message-list');
 const filter = $('filter');
 
 let sb = null;
-let photos = [];
+let messages = [];
 let urls = new Map();
 let viewable = [];
 
@@ -34,68 +36,76 @@ async function refreshAuthState() {
   }
   $('admin-email').textContent = user.email;
   show('dashboard');
-  await loadPhotos();
+  await loadMessages();
 }
 
-async function loadPhotos() {
-  grid.innerHTML = loadingHtml('Loading photos…');
-  const { data, error } = await sb.from('photos').select('*').order('created_at', { ascending: false });
+async function loadMessages() {
+  list.innerHTML = loadingHtml('Loading messages…');
+  const { data, error } = await sb.from('messages')
+    .select('id, body, photo_path, photo_width, photo_height, is_read, created_at')
+    .order('created_at', { ascending: false });
   if (error) {
-    grid.innerHTML = `<p class="notice notice-error">Could not load photos: ${escapeHtml(error.message)}</p>`;
+    list.innerHTML = `<p class="notice notice-error">Could not load messages: ${escapeHtml(error.message)}</p>`;
     return;
   }
-  photos = data;
-  urls = await getSignedUrls(sb, photos);
+  messages = data;
+  urls = await getSignedUrls(sb, MESSAGE_PHOTO_BUCKET, messages.map((m) => m.photo_path).filter(Boolean));
   render();
 }
 
 function render() {
-  const publicCount = photos.filter((p) => p.is_public).length;
-  $('summary').textContent = `${photos.length} photos · ${publicCount} public · ${photos.length - publicCount} private`;
+  const unread = messages.filter((m) => !m.is_read).length;
+  $('summary').textContent = `${messages.length} ${messages.length === 1 ? 'message' : 'messages'} · ${unread} unread`;
 
-  const visible = photos.filter((p) => filter.value === 'all' || (filter.value === 'public') === p.is_public);
+  const visible = messages.filter((m) =>
+    filter.value === 'all' || (filter.value === 'unread' ? !m.is_read : Boolean(m.photo_path)));
   if (!visible.length) {
-    grid.innerHTML = '<p class="empty-state">No photos to show.</p>';
+    list.innerHTML = `<p class="empty-state">${messages.length ? 'No messages match this filter.' : 'No messages yet.'}</p>`;
     return;
   }
 
   viewable = [];
-  const cards = visible.map((p) => {
-    const url = urls.get(p.storage_path);
-    if (url) viewable.push({ src: url, caption: p.title || 'Untitled' });
-    return photoCardHtml(p, url, {
-      index: viewable.length - 1,
-      placeholder: { icon: 'alert', text: 'Image file missing' },
-      details: [
-        `Album: ${escapeHtml(p.album || 'Unsorted')}`,
-        `${formatDate(p.created_at)} · ${formatBytes(p.size_bytes)}${p.width ? ` · ${p.width}×${p.height}` : ''}`,
-        `<span title="${escapeHtml(p.owner_id)}">Uploader: ${escapeHtml(String(p.owner_id ?? 'unknown').slice(0, 8))}</span>`,
-      ],
-      actions: `
-        <button class="btn btn-small" type="button" data-toggle="${p.id}">Make ${p.is_public ? 'private' : 'public'}</button>
-        <button class="btn btn-small btn-danger" type="button" data-delete="${p.id}">Delete</button>`,
-    });
-  });
-  grid.innerHTML = `<div class="photo-grid">${cards.join('')}</div>`;
+  list.innerHTML = visible.map((m) => {
+    const url = m.photo_path ? urls.get(m.photo_path) : null;
+    if (url) viewable.push({ src: url, caption: `Photo sent ${formatDateTime(m.created_at)}` });
+    const photo = !m.photo_path ? ''
+      : url
+        ? `<button class="message-photo" type="button" data-view="${viewable.length - 1}" aria-label="View attached photo">
+             <img src="${escapeHtml(url)}" alt="Attached photo" loading="lazy">
+           </button>`
+        : '<p class="hint">The attached photo could not be loaded.</p>';
+    return `
+      <article class="message-card${m.is_read ? '' : ' unread'}">
+        <div class="message-meta">
+          ${m.is_read ? '' : '<span class="badge badge-new">New</span>'}
+          <time datetime="${m.created_at}">${formatDateTime(m.created_at)}</time>
+        </div>
+        <p class="message-body">${escapeHtml(m.body)}</p>
+        ${photo}
+        <div class="message-actions">
+          <button class="btn btn-small" type="button" data-toggle-read="${m.id}">Mark as ${m.is_read ? 'unread' : 'read'}</button>
+          <button class="btn btn-small btn-danger" type="button" data-delete="${m.id}">Delete</button>
+        </div>
+      </article>`;
+  }).join('');
 }
 
-grid.addEventListener('click', async (e) => {
+list.addEventListener('click', async (e) => {
   const viewBtn = e.target.closest('[data-view]');
   if (viewBtn) {
     openLightbox(viewable, Number(viewBtn.dataset.view));
     return;
   }
 
-  const btn = e.target.closest('[data-toggle], [data-delete]');
+  const btn = e.target.closest('[data-toggle-read], [data-delete]');
   if (!btn) return;
-  const photo = photos.find((p) => p.id === (btn.dataset.toggle || btn.dataset.delete));
-  if (!photo) return;
-  const title = photo.title || 'Untitled';
+  const message = messages.find((m) => m.id === (btn.dataset.toggleRead || btn.dataset.delete));
+  if (!message) return;
 
   if (btn.dataset.delete) {
     const ok = await confirmDialog({
-      title: 'Delete this photo?',
-      message: `"${title}" will be permanently deleted. This can’t be undone.`,
+      title: 'Delete this message?',
+      message: message.photo_path ? 'The message and its photo will be permanently deleted.' : 'This message will be permanently deleted.',
       confirmLabel: 'Delete',
       danger: true,
     });
@@ -104,17 +114,21 @@ grid.addEventListener('click', async (e) => {
 
   btn.disabled = true;
   try {
-    if (btn.dataset.toggle) {
-      const { data, error } = await sb.from('photos').update({ is_public: !photo.is_public }).eq('id', photo.id).select();
+    if (btn.dataset.toggleRead) {
+      const { data, error } = await sb.from('messages').update({ is_read: !message.is_read }).eq('id', message.id).select('id');
       if (error || !data?.length) throw new Error(error?.message ?? 'Update was not allowed.');
-      photo.is_public = !photo.is_public;
+      message.is_read = !message.is_read;
       render();
-      toast(`"${title}" is now ${photo.is_public ? 'public' : 'private'}.`, 'success');
     } else {
-      await deletePhoto(sb, photo);
-      photos = photos.filter((p) => p.id !== photo.id);
+      if (message.photo_path) {
+        const { error } = await sb.storage.from(MESSAGE_PHOTO_BUCKET).remove([message.photo_path]);
+        if (error) throw new Error(`Could not delete the photo: ${error.message}`);
+      }
+      const { error } = await sb.from('messages').delete().eq('id', message.id);
+      if (error) throw new Error(`Could not delete the message: ${error.message}`);
+      messages = messages.filter((m) => m.id !== message.id);
       render();
-      toast(`"${title}" was deleted.`, 'success');
+      toast('Message deleted.', 'success');
     }
   } catch (err) {
     toast(err.message, 'error');
@@ -123,7 +137,7 @@ grid.addEventListener('click', async (e) => {
 });
 
 filter.addEventListener('change', render);
-$('refresh').addEventListener('click', loadPhotos);
+$('refresh').addEventListener('click', loadMessages);
 
 $('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();

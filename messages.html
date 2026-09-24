@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messages · Depart Karl</title>
+  <meta name="description" content="Send Karl an anonymous message, with a photo if you like.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Depart Karl">
+  <meta property="og:title" content="Messages">
+  <meta property="og:description" content="Send Karl an anonymous message, with a photo if you like.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/pages/messages.js"></script>
+</head>
+<body data-page="messages">
+  <header id="site-header" class="site-header"></header>
+
+  <main id="main">
+    <div class="narrow">
+      <h1>Send me a message</h1>
+      <p class="lead">Your message is anonymous. I won't see your name or who sent it.</p>
+
+      <p id="page-status" class="notice" role="status"></p>
+
+      <section id="compose" class="card">
+        <form id="message-form" class="form" novalidate>
+          <label class="field">
+            <span>Your message</span>
+            <textarea id="message-body" rows="7" maxlength="2000" placeholder="Write your message…"></textarea>
+          </label>
+          <p id="char-count" class="hint char-count">0 / 2000</p>
+
+          <div id="photo-preview" class="photo-preview" hidden>
+            <img alt="Photo you are attaching">
+            <button id="photo-remove" class="btn btn-small" type="button">Remove photo</button>
+          </div>
+
+          <div class="form-actions">
+            <button id="send-btn" class="btn btn-primary" type="submit">Send message</button>
+            <label id="photo-btn" class="btn btn-small file-btn">
+              Upload a photo if you want
+              <input id="photo-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+            </label>
+          </div>
+          <p id="form-status" class="notice" role="status"></p>
+        </form>
+      </section>
+
+      <section id="sent" class="card sent-card" hidden>
+        <h2>Message sent</h2>
+        <p class="muted">Thank you! Your message was delivered anonymously.</p>
+        <button id="send-another" class="btn" type="button">Send another message</button>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>
