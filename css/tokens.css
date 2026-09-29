@@ -1,57 +1,79 @@
 /* ==========================================================================
    Design tokens — every color, font, size and shadow the site uses.
    To restyle the whole website, change the values here.
+   Style: "Puzzle the change" poster — warm paper, crimson puzzle road,
+   black distressed headlines.
    ========================================================================== */
+
+/* Fonts are stored in /fonts (Montserrat and Rubik Dirt, both SIL Open Font License). */
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("../fonts/montserrat-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Rubik Dirt";
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/rubik-dirt-latin.woff2") format("woff2");
+}
 
 :root {
   /* Typography */
-  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-heading: var(--font-body);
+  --font-display: "Rubik Dirt", "Arial Black", Impact, sans-serif; /* big poster titles */
   --font-size: 16px;
 
   /* Surfaces & text */
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface-hover: #f8f9fb;
-  --surface-sunken: #e6e9ef;
-  --text: #1c2230;
-  --muted: #5b6474;
-  --border: #dde1e8;
-  --border-strong: #c6cdd8;
+  --bg: #efece6;              /* poster paper */
+  --surface: #fbfaf7;
+  --surface-hover: #f4f1ec;
+  --surface-sunken: #e3dfd7;
+  --text: #121212;
+  --muted: #5d5852;
+  --border: #d9d3c9;
+  --border-strong: #bdb5a8;
 
   /* Brand & status colors */
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-soft: #e6eefe;
-  --accent-soft-text: #1e3a8a;
+  --accent: #9b1b21;          /* puzzle-road crimson */
+  --accent-hover: #7c1318;
+  --accent-soft: #f3e1df;
+  --accent-soft-text: #6a0f13;
   --on-accent: #ffffff;
-  --success: #15803d;
-  --success-soft: #e5f5ea;
-  --warning: #8a5300;
-  --warning-soft: #fff3dc;
-  --danger: #c62828;
-  --danger-hover: #a91f1f;
-  --danger-soft: #fdecec;
+  --success: #1f7a3a;         /* green puzzle piece */
+  --success-soft: #e3f1e6;
+  --warning: #8a5a00;
+  --warning-soft: #fdf1cf;    /* yellow puzzle piece */
+  --danger: #c0262d;
+  --danger-hover: #9e1d23;
+  --danger-soft: #fbe6e6;
+
+  /* Puzzle road (the red diagonal band in the background) */
+  --road: #9b1b21;
+  --road-dark: #6f1015;
+  --road-width: 120px;
 
   /* Shape & depth */
-  --radius: 10px;
-  --radius-small: 8px;
-  --shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 4px 16px rgba(16, 24, 40, 0.06);
-  --shadow-raised: 0 8px 30px rgba(0, 0, 0, 0.18);
-  --overlay: rgba(15, 23, 42, 0.45);
+  --radius: 6px;
+  --radius-small: 4px;
+  --shadow: 0 1px 2px rgba(40, 20, 10, 0.08), 0 6px 18px rgba(40, 20, 10, 0.08);
+  --shadow-raised: 0 10px 30px rgba(20, 10, 5, 0.22);
+  --overlay: rgba(18, 12, 10, 0.55);
 
   /* Layout */
-  --header-h: 56px;
+  --header-h: 60px;
   --content-w: 1040px;
 
   /* Sudoku board */
-  --sudoku-line: #c3c9d4;
+  --sudoku-line: #cfc7bb;
   --sudoku-box-line: var(--text);
   --sudoku-given: var(--text);
   --sudoku-entry: var(--accent);
-  --sudoku-peer: #eef2f8;
-  --sudoku-same: #d7e3fc;
-  --sudoku-selected: #b9cdfa;
-  --sudoku-wrong: #fbd5d5;
-  --sudoku-panel: rgba(255, 255, 255, 0.97);
+  --sudoku-peer: #f4efe8;
+  --sudoku-same: #f1d9d7;
+  --sudoku-selected: #e6b9b6;
+  --sudoku-wrong: #f7cccc;
+  --sudoku-panel: rgba(251, 250, 247, 0.97);
 }

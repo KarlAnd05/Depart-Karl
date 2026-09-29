@@ -18,14 +18,39 @@ body {
   line-height: 1.5;
   color: var(--text);
   background: var(--bg);
+  overflow-x: hidden;
 }
+
+/* The crimson puzzle road crossing the page, like on the poster. */
+body::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  top: 56%;
+  z-index: 0;
+  width: 300vmax;
+  height: var(--road-width);
+  background: url("../img/puzzle-texture.svg") 0 0 / 64px 64px, linear-gradient(var(--road), var(--road));
+  box-shadow: 0 5px 0 var(--road-dark), 0 18px 30px rgba(40, 10, 5, 0.25);
+  transform: translate(-50%, -50%) rotate(-34deg);
+  pointer-events: none;
+}
+.site-header, main, .site-footer { position: relative; z-index: 1; }
 
 img { max-width: 100%; }
 svg.icon { width: 1.25em; height: 1.25em; flex: none; }
 
 h1, h2, h3 { font-family: var(--font-heading); }
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.25rem 0; }
-h2 { font-size: 1.2rem; line-height: 1.3; margin: 0 0 0.75rem; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 7vw, 3.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0.5rem 0 0.6rem;
+}
+h2 { font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 0 0 0.75rem; }
 h3 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; }
 
 main {
@@ -36,7 +61,25 @@ main {
   padding: 20px 16px 40px;
 }
 
-.lead { color: var(--muted); margin: 0 0 1rem; }
+.lead { color: var(--muted); font-weight: 500; margin: 0 0 1.25rem; }
+
+/* Home page title: "PUZZLE / the change" */
+.hero { margin: 0.5rem 0 0.75rem; }
+.hero-eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero-title { font-size: clamp(3rem, 12vw, 5.5rem); margin: 0.1em 0 0; }
+.hero-title span {
+  display: block;
+  font-size: 0.52em;
+  text-transform: none;
+  letter-spacing: 0;
+}
 .muted { color: var(--muted); }
 .hint { font-size: 0.875rem; color: var(--muted); margin: 0; }
 
@@ -70,8 +113,8 @@ main {
   top: 0;
   z-index: 50;
   min-height: var(--header-h);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .header-inner {
@@ -86,24 +129,35 @@ main {
   gap: 8px 16px;
 }
 
-.brand { font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand span { color: var(--accent); }
 
 .site-nav { display: flex; gap: 4px; }
 .site-nav a {
   padding: 8px 12px;
-  border-radius: var(--radius-small);
-  color: var(--muted);
-  font-weight: 500;
+  border-radius: 0;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
 }
-.site-nav a:hover { background: var(--bg); color: var(--text); }
-.site-nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.site-nav a:hover { color: var(--accent); }
+.site-nav a[aria-current="page"] { color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
 
 .nav-toggle {
   display: none;
   width: 40px; height: 40px;
   align-items: center; justify-content: center;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-small);
   background: var(--surface);
   color: var(--text);
@@ -114,17 +168,20 @@ main {
   .nav-toggle { display: inline-flex; }
   .site-nav { display: none; width: 100%; flex-direction: column; padding-bottom: 12px; }
   .site-nav.open { display: flex; }
-  .site-nav a { padding: 10px 12px; }
+  .site-nav a { padding: 12px 4px; border-top: 1px solid var(--border); }
+  .site-nav a[aria-current="page"] { box-shadow: inset 3px 0 0 var(--accent); padding-left: 12px; }
 }
 
 .site-footer {
   padding: 16px;
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: var(--muted);
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  background: var(--bg);
+  border-top: 1px solid var(--border-strong);
 }
+.site-footer p { margin: 0; }
+.site-footer .event { margin-bottom: 4px; color: var(--text); font-weight: 600; letter-spacing: 0.04em; }
 .site-footer a { color: var(--muted); }
 
 /* ---------- Buttons & form controls ---------- */
@@ -141,7 +198,10 @@ main {
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
@@ -153,7 +213,7 @@ main {
 .btn-danger { color: var(--danger); }
 .btn-danger-solid { background: var(--danger); border-color: var(--danger); color: #fff; }
 .btn-danger-solid:hover:not(:disabled) { background: var(--danger-hover); border-color: var(--danger-hover); }
-.btn-small { min-height: 32px; padding: 4px 10px; font-size: 0.875rem; }
+.btn-small { min-height: 32px; padding: 4px 10px; font-size: 0.75rem; }
 
 /* A <label class="btn"> wrapping a visually hidden file input. */
 .file-btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -214,8 +274,9 @@ fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
 
 .empty-state {
   padding: 40px 16px;
-  border: 2px dashed var(--border);
+  border: 2px dashed var(--border-strong);
   border-radius: var(--radius);
+  background: var(--surface);
   text-align: center;
   color: var(--muted);
 }
@@ -284,6 +345,9 @@ fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
 .puzzle { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
 .puzzle-stats {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--bg);
   display: flex;
   gap: 20px;
   color: var(--muted);
@@ -356,6 +420,9 @@ fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
 .sudoku-panel .toolbar { margin-bottom: 12px; }
 
 .sudoku-stats {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--bg);
   display: flex;
   justify-content: space-between;
   max-width: 480px;
@@ -390,7 +457,7 @@ fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
   color: var(--sudoku-entry);
   font: inherit;
   font-size: clamp(1.05rem, 5vw, 1.6rem);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
 }
 .sudoku-cell:nth-child(9n) { border-right: 0; }

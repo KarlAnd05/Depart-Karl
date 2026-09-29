@@ -7,6 +7,7 @@
 import { icon } from './icons.js';
 
 export const SITE_NAME = 'Depart Karl';
+export const EVENT_LINE = 'Départ du routier Karl Andraos · 2 Octobre 2026 à 19h30 · Église St Georges, Hadat';
 
 export const PAGES = [
   { id: 'puzzle', label: 'Puzzle', href: 'index.html' },
@@ -23,7 +24,7 @@ function renderHeader() {
   header.innerHTML = `
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="header-inner">
-      <a class="brand" href="index.html">${SITE_NAME}</a>
+      <a class="brand" href="index.html">Depart <span>Karl</span></a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
         ${icon('menu')}
       </button>
@@ -44,7 +45,9 @@ function renderHeader() {
 function renderFooter() {
   const footer = document.getElementById('site-footer');
   if (!footer) return;
-  footer.innerHTML = `<span>© ${new Date().getFullYear()} ${SITE_NAME}</span> · <a href="admin.html">Admin</a>`;
+  footer.innerHTML = `
+    <p class="event">${EVENT_LINE}</p>
+    <p>© ${new Date().getFullYear()} ${SITE_NAME} · <a href="admin.html">Admin</a></p>`;
 }
 
 renderHeader();

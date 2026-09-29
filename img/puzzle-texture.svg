@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <!-- One jigsaw tile, repeated to form the red puzzle road. -->
+  <g fill="none" stroke-linejoin="round">
+    <path d="M0 80V46H5A7 7 0 1 1 5 34H0V0H34V5A7 7 0 1 0 46 5V0H80" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
+    <path d="M0 80V46H5A7 7 0 1 1 5 34H0V0H34V5A7 7 0 1 0 46 5V0H80" stroke="rgba(40,0,0,0.75)" stroke-width="1.6"/>
+  </g>
+</svg>
