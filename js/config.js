@@ -21,6 +21,6 @@ export const PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 export const PHOTO_MAX_SIDE_PX = 2560;
 export const PHOTO_MAX_INPUT_BYTES = 30 * 1024 * 1024;
 
-// Max size for images that are only used inside the browser
-// (custom puzzle). They are never uploaded.
+// Max size for a photo chosen in the Custom Puzzle (a resized copy is
+// sent to the admin inbox).
 export const LOCAL_IMAGE_MAX_BYTES = 15 * 1024 * 1024;
