@@ -12,7 +12,9 @@ export const EVENT_LINE = 'Départ du routier Karl Andraos · 2 Octobre 2026 à 
 export const PAGES = [
   { id: 'puzzle', label: 'Puzzle', href: 'index.html' },
   { id: 'custom-puzzle', label: 'Custom Puzzle', href: 'custom-puzzle.html' },
-  { id: 'sudoku', label: 'Sudoku', href: 'sudoku.html' },
+  // Sudoku is hidden from the menu (the page still works at sudoku.html).
+  // To show it again, remove the two slashes at the start of the next line.
+  // { id: 'sudoku', label: 'Sudoku', href: 'sudoku.html' },
   { id: 'messages', label: 'Messages', href: 'messages.html' },
 ];
 

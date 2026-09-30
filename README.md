@@ -6,7 +6,7 @@ A small website with games and an anonymous message box:
 |---|---|---|
 | Puzzle | `index.html` | Plays the photos in `puzzle-photos/` in name order (1, 2, 3…; everyone starts with photo 1), cuts it into pieces and shuffles them. |
 | Custom Puzzle | `custom-puzzle.html` | Same puzzle, using a photo from the visitor's device (never uploaded). |
-| Sudoku | `sudoku.html` | Playable Sudoku (Easy/Medium/Hard) with a timer, undo and mistake checking. |
+| Sudoku | `sudoku.html` | Playable Sudoku (Easy/Medium/Hard) with a timer, undo and mistake checking. Hidden from the menu (see `js/core/site.js`). |
 | Messages | `messages.html` | Visitors send Karl an **anonymous** message, with a photo if they want. |
 | Admin | `admin.html` | Admin login; read messages and their photos, mark read/unread, delete. Linked in the footer. |
 
