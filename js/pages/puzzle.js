@@ -4,6 +4,8 @@ import { PuzzleGame } from '../puzzle/puzzle-game.js';
 
 // Photos live in this folder. The list of files (manifest.json) is rebuilt
 // automatically by the deploy workflow, so just add or remove images there.
+// They are played in file-name order (1.jpg, 2.jpg, 3.jpg…): everyone starts
+// with the first photo, and "Next photo" moves on to the following one.
 const PHOTO_DIR = 'puzzle-photos/';
 const IMAGE_FILE = /\.(jpe?g|png|webp|gif|svg)$/i;
 
@@ -12,7 +14,7 @@ const difficulty = $('difficulty');
 const status = $('status');
 
 let photos = [];
-let current = null;
+let currentIndex = -1;
 
 const game = new PuzzleGame($('puzzle'), {
   solvedActions: [
@@ -38,17 +40,9 @@ async function loadPhotoList() {
   return (data.photos ?? []).filter((name) => IMAGE_FILE.test(name));
 }
 
-function pickRandomPhoto() {
-  if (photos.length === 1) return photos[0];
-  let next;
-  do {
-    next = photos[Math.floor(Math.random() * photos.length)];
-  } while (next === current);
-  return next;
-}
-
 async function nextPhoto() {
-  current = pickRandomPhoto();
+  currentIndex = (currentIndex + 1) % photos.length;
+  const current = photos[currentIndex];
   setLoading('Loading photo…');
   try {
     await game.start(PHOTO_DIR + encodeURIComponent(current), Number(difficulty.value));
